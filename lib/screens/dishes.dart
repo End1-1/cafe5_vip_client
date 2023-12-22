@@ -1,11 +1,11 @@
 import 'package:cafe5_vip_client/screens/app/screen.dart';
-import 'package:cafe5_vip_client/screens/widgets/part2.dart';
+import 'package:cafe5_vip_client/screens/widgets/dish.dart';
 import 'package:cafe5_vip_client/utils/prefs.dart';
 import 'package:flutter/material.dart';
 
-class WelcomeScreen extends AppScreen {
-
-  const WelcomeScreen(super.model, {super.key});
+class DishesScreen extends AppScreen {
+  final int part2;
+  const DishesScreen(super.model, this.part2, {super.key});
 
   @override
   PreferredSizeWidget appBar() {
@@ -47,10 +47,7 @@ class WelcomeScreen extends AppScreen {
                                         color: Colors.red,
                                         fontWeight: FontWeight.bold))));
                       })
-                ]))),
-        IconButton(
-            onPressed: model.navSettings,
-            icon: const Icon(Icons.settings_outlined))
+                ])))
       ],
     );
   }
@@ -63,8 +60,9 @@ class WelcomeScreen extends AppScreen {
           child: Align(alignment: Alignment.center, child:  Wrap(
             direction: Axis.horizontal,
             children: [
-              for (final e in model.appdata.part2) ... [
-                Part2(e, model)
+              for (final e in model.appdata.dish) ... [
+                if (e['f_part'] == part2)
+                  Dish(e, model)
               ]
             ],
           )),
@@ -72,4 +70,5 @@ class WelcomeScreen extends AppScreen {
       ],
     );
   }
+
 }

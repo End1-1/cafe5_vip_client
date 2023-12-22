@@ -13,9 +13,14 @@ class SettingsScreen extends AppScreen {
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
+      const SizedBox(height: 10),
       Row(children:[
         Expanded(child: MTextFormField(controller: model.settingsServerAddressController, hintText: model.tr('Settings')))
-    ])
+    ]),
+      const SizedBox(height: 10),
+      Row(children:[
+        Expanded(child: MTextFormField(controller: model.menuCodeController, hintText: model.tr('Menu code')))
+      ])
     ],
   );
   }

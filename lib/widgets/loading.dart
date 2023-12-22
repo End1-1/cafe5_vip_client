@@ -2,10 +2,10 @@ import 'package:cafe5_vip_client/utils/prefs.dart';
 import 'package:flutter/material.dart';
 
 class Loading {
-  late BuildContext dialogContext;
+  static late BuildContext dialogContext;
 
-  void show() {
-    showDialog(
+  static Future<void> show() async {
+    var a = await showDialog(
         barrierDismissible: false,
         useSafeArea: true,
         context: Prefs.navigatorKey.currentContext!,
@@ -17,5 +17,6 @@ class Loading {
             children: [Center(child: LinearProgressIndicator())],
           );
         });
+    return a;
   }
 }

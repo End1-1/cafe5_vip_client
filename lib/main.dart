@@ -47,6 +47,7 @@ class _App extends State<App> {
 
   @override
   Widget build(BuildContext context) {
+    _appModel.screenSize ??= MediaQuery.sizeOf(context);
     return MaterialApp(
       title: prefs.appTitle(),
       debugShowCheckedModeBanner: false,
@@ -61,6 +62,7 @@ class _App extends State<App> {
 
   void initialization() async {
     if (prefs.string("serveraddress").isEmpty) {
+      FlutterNativeSplash.remove();
       return;
     }
     await _appModel.initModel();
