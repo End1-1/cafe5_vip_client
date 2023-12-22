@@ -1,7 +1,9 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:cafe5_vip_client/screens/app/model.dart';
 import 'package:cafe5_vip_client/screens/app/screen.dart';
+import 'package:cafe5_vip_client/screens/welcome.dart';
 import 'package:cafe5_vip_client/utils/http_overrides.dart';
 import 'package:cafe5_vip_client/utils/prefs.dart';
 import 'package:flutter/material.dart';
@@ -35,6 +37,8 @@ class App extends StatefulWidget {
 }
 
 class _App extends State<App> {
+  final AppModel _appModel = AppModel();
+
   @override
   void initState() {
     super.initState();
@@ -51,22 +55,15 @@ class _App extends State<App> {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: AppScreen(),
+      home: WelcomeScreen(_appModel),
     );
   }
 
   void initialization() async {
-    try {
-      final result =
-      await http.get(Uri.https('magnitsoft.com', '/crm/crm.json'));
-      if (result.statusCode < 299) {
-        Map<String, dynamic> json = jsonDecode(result.body);
-        //prefs.setString('serveraddress', json['server']);
-        prefs.setString('serveraddress', 'cview.operasuitehotel.com');
-      }
-    } catch (e) {
-      print(e);
+    if (prefs.string("serveraddress").isEmpty) {
+      return;
     }
+    await _appModel.initModel();
     FlutterNativeSplash.remove();
   }
 }

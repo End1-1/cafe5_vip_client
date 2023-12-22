@@ -1,26 +1,22 @@
 import 'package:cafe5_vip_client/screens/app/model.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-class AppScreen extends StatelessWidget {
-  final model = AppModel();
+abstract class AppScreen extends StatelessWidget {
+  final AppModel model;
 
-  AppScreen({super.key});
+  const AppScreen( this.model, {super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: appBar(),
       body: SafeArea(
-        child: StreamBuilder<Widget?>(
-          stream: model.bodyController.stream, builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
-            if (snapshot.data == null) {
-              return Center(child: SizedBox(child: CircularProgressIndicator()));
-            }
-            return snapshot.data;
-        },
-        )
-      ),
+        minimum: const EdgeInsets.fromLTRB(5, 20, 5, 5),
+          child: body()),
     );
   }
 
+  PreferredSizeWidget appBar();
+
+  Widget body();
 }
