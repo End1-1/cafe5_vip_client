@@ -1,3 +1,4 @@
+import 'package:cafe5_vip_client/screens/app/model.dart';
 import 'package:cafe5_vip_client/utils/global.dart';
 import 'package:cafe5_vip_client/utils/prefs.dart';
 import 'package:flutter/material.dart';
@@ -30,6 +31,44 @@ class Dialogs {
                             Navigator.pop(context);
                           },
                           title: 'OK')))
+            ],
+          );
+        });
+  }
+
+  static Future<bool?> question(String text, AppModel model) async {
+    return await showDialog(
+        barrierDismissible: true,
+        useSafeArea: true,
+        context: Prefs.navigatorKey.currentContext!,
+        builder: (context) {
+          return AlertDialog(
+            title: Text(prefs.appTitle()),
+            contentPadding: const EdgeInsets.fromLTRB(30, 5, 30, 5),
+            content: Container(
+                height: 300,
+                alignment: Alignment.center,
+                child: Text(
+                  text,
+                  textAlign: TextAlign.center,
+                  maxLines: 10,
+                  style: const TextStyle(fontSize: 18),
+                )),
+            actions: [
+             SizedBox.fromSize(
+                      size: const Size(100, kButtonHeight),
+                      child: globalOutlinedButton(
+                          onPressed: () {
+                            Navigator.pop(context, true);
+                          },
+                          title: model.tr('Yes'))),
+               SizedBox.fromSize(
+                      size: const Size(100, kButtonHeight),
+                      child: globalOutlinedButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          title: model.tr('No')))
             ],
           );
         });

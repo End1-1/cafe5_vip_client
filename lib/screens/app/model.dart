@@ -18,7 +18,9 @@ class AppModel {
   static const query_call_function = -1;
   static const query_init = 1;
   static const query_create_order = 2;
-  static const query_procces_order = 3;
+  static const query_get_process_list = 3;
+  static const query_end_order = 4;
+  static const query_start_order = 5;
 
   final settingsServerAddressController = TextEditingController();
   final menuCodeController = TextEditingController();
@@ -132,8 +134,32 @@ class AppModel {
       }
     });
     if (queryResult['status'] == 1) {
-      httpOk(query_procces_order, queryResult['data']);
+      httpOk(query_get_process_list, queryResult['data']);
     } else {}
+  }
+
+  void startOrder(Map<String, dynamic> o) {
+    Dialogs.question(tr('Start order?'), this).then((value) {
+      if (value ?? false) {
+        httpQuery(query_start_order, {
+          'query': query_call_function,
+          'function': 'sf_start_order',
+          'params': o
+        });
+      }
+    });
+  }
+
+  void endOrder(Map<String, dynamic> o) {
+    Dialogs.question(tr('End order?'), this).then((value) {
+      if (value ?? false) {
+        httpQuery(query_end_order, {
+          'query': query_call_function,
+          'function': 'sf_end_order',
+          'params': o
+        });
+      }
+    });
   }
 
   void httpOk(int code, dynamic data) {
@@ -153,6 +179,15 @@ class AppModel {
         appdata.basket.clear();
         navHome();
         Dialogs.show(tr('Your order was created'));
+        break;
+      case query_get_process_list:
+        basketController.add(data);
+        break;
+      case query_end_order:
+        getProcessList();
+        break;
+      case query_start_order:
+        getProcessList();
         break;
     }
   }
