@@ -1,4 +1,5 @@
 import 'package:cafe5_vip_client/screens/app/model.dart';
+import 'package:cafe5_vip_client/utils/global.dart';
 import 'package:flutter/material.dart';
 
 class Part2 extends StatelessWidget {
@@ -16,13 +17,28 @@ class Part2 extends StatelessWidget {
         child: Container(
           margin: const EdgeInsets.fromLTRB(10, 10, 10, 10),
           padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
-          width: model.screenSize!.width * 0.4,
-          height: 100,
+          width: model.screenSize!.width * model.screenMultiple,
+          height: (model.screenSize!.width * model.screenMultiple) + 150,
           decoration: const BoxDecoration(
               color: Colors.blueAccent,
-              border: Border.fromBorderSide(BorderSide(color: Colors.white10, width: 2)),
+              border: Border.fromBorderSide(
+                  BorderSide(color: Colors.white10, width: 2)),
               borderRadius: BorderRadius.all(Radius.circular(20))),
-          child: Column(children: [
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+            Container(
+              padding: const EdgeInsets.all(5),
+                alignment: Alignment.center,
+                decoration: const BoxDecoration(color: Colors.white,
+                borderRadius: BorderRadius.all(Radius.circular(4))),
+                height: model.screenSize!.width * model.screenMultiple,
+                width: model.screenSize!.width * model.screenMultiple,
+                child: data['f_image'].isEmpty
+                    ? Icon(Icons.not_interested_outlined,
+                        size: model.screenSize!.width * model.screenMultiple)
+                    : imageFromBase64(data['f_image'],
+                        width: model.screenSize!.width * model.screenMultiple)),
             Text(data['f_name'],
                 style: const TextStyle(
                     color: Colors.white,

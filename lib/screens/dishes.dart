@@ -28,7 +28,7 @@ class DishesScreen extends AppScreen {
                   StreamBuilder(
                       stream: model.basketController.stream,
                       builder: (builder, snapshot) {
-                        if (snapshot.data == null) {
+                        if (model.appdata.basket.isEmpty) {
                           return Container();
                         }
                         return Align(
@@ -40,7 +40,7 @@ class DishesScreen extends AppScreen {
                                 decoration: BoxDecoration(
                                     color: Colors.white,
                                     borderRadius: BorderRadius.circular(10)),
-                                child: Text(snapshot.data,
+                                child: Text('${model.appdata.basket.length}',
                                     textAlign: TextAlign.center,
                                     style: const TextStyle(
                                         fontSize: 9,

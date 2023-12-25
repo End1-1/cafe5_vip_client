@@ -11,7 +11,7 @@ abstract class AppScreen extends StatelessWidget {
     return Scaffold(
       appBar: appBar(),
       body: SafeArea(
-        minimum: const EdgeInsets.fromLTRB(5, 20, 5, 5),
+       // minimum: const EdgeInsets.fromLTRB(5, 20, 5, 5),
           child: body()),
     );
   }

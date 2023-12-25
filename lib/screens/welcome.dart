@@ -28,7 +28,7 @@ class WelcomeScreen extends AppScreen {
                   StreamBuilder(
                       stream: model.basketController.stream,
                       builder: (builder, snapshot) {
-                        if (snapshot.data == null) {
+                        if (model.appdata.basket.isEmpty) {
                           return Container();
                         }
                         return Align(
@@ -40,7 +40,7 @@ class WelcomeScreen extends AppScreen {
                                 decoration: BoxDecoration(
                                     color: Colors.white,
                                     borderRadius: BorderRadius.circular(10)),
-                                child: Text(snapshot.data,
+                                child: Text('${model.appdata.basket.length}',
                                     textAlign: TextAlign.center,
                                     style: const TextStyle(
                                         fontSize: 9,
@@ -48,9 +48,21 @@ class WelcomeScreen extends AppScreen {
                                         fontWeight: FontWeight.bold))));
                       })
                 ]))),
-        IconButton(
-            onPressed: model.navSettings,
-            icon: const Icon(Icons.settings_outlined))
+        PopupMenuButton(
+            icon: const Icon(Icons.settings_outlined), itemBuilder: (BuildContext context) { 
+              return [
+                PopupMenuItem(child: ListTile(
+                  leading: Icon(Icons.settings_outlined),
+                  title: Text(model.tr('Options')),
+                  onTap: model.navSettings,
+                )),
+                PopupMenuItem(child: ListTile(
+                  leading: Icon(Icons.monitor),
+                  title: Text(model.tr('Process')),
+                  onTap: model.navProcess,
+                ))
+              ];
+        },)
       ],
     );
   }
