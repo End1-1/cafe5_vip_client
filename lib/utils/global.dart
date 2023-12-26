@@ -35,6 +35,14 @@ DateTime strToDateTime(String dateTime) {
   return DateFormat('yyyy-MM-dd HH:mm:ss').parse(dateTime);
 }
 
+String dateTimeToStr(DateTime dateTime) {
+  return DateFormat('yyyy-MM-dd HH:mm').format(dateTime);
+}
+
+String dateTimeToTimeStr(DateTime dateTime) {
+  return DateFormat('HH:mm').format(dateTime);
+}
+
 String processDuration(String begin, int duration, String h, String m) {
   DateTime b = strToDateTime(begin);
   DateTime now = DateTime.now();

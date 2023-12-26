@@ -6,6 +6,7 @@ import 'package:cafe5_vip_client/screens/dishes.dart';
 import 'package:cafe5_vip_client/screens/process.dart';
 import 'package:cafe5_vip_client/screens/settings.dart';
 import 'package:cafe5_vip_client/screens/welcome.dart';
+import 'package:cafe5_vip_client/utils/global.dart';
 import 'package:cafe5_vip_client/utils/http_query.dart';
 import 'package:cafe5_vip_client/utils/prefs.dart';
 import 'package:cafe5_vip_client/widgets/dialogs.dart';
@@ -235,6 +236,11 @@ class AppModel {
 
   Future<void> httpQuery(int code, Map<String, dynamic> params) async {
     dialogController.add(0);
+    for (var e in params['params'].entries) {
+      if (e.value is DateTime) {
+        params['params']![e.key] = dateTimeToStr(e.value);
+      }
+    }
     final queryResult = await HttpQuery().request(params);
     Navigator.pop(Loading.dialogContext);
     if (queryResult['status'] == 1) {

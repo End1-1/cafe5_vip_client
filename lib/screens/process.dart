@@ -52,6 +52,9 @@ class _BodyState extends State<_Body> {
           if (snapshot.data == null) {
             return const Center(child: CircularProgressIndicator());
           }
+          if (snapshot.data is int) {
+            return const Center(child: CircularProgressIndicator());
+          }
           pending = 0;
           inProgress = 0;
           for (final o in snapshot.data) {
@@ -183,7 +186,7 @@ class _BodyState extends State<_Body> {
                           Text('${i['f_part2name']} ${i['f_dishname']}',
                               style: const TextStyle(color: Colors.black)),
                           Expanded(child: Container()),
-                          Icon(Icons.access_time_rounded),
+                          const Icon(Icons.access_time_rounded),
                           SizedBox(
                               width: 100,
                               child: Text(
@@ -194,7 +197,18 @@ class _BodyState extends State<_Body> {
                                       fontWeight: FontWeight.bold,
                                       color: Colors.black)))
                         ],
-                      )
+                      ),
+                      Row(children: [
+                        Expanded(child: Container()),
+                        Icon(Icons.access_alarm_rounded),
+    SizedBox(
+    width: 100,
+    child:Text('${dateTimeToTimeStr(o['f_done'])}', textAlign: TextAlign.right,
+        style: const TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+            color: Colors.black)))
+                      ],)
                     ]
                   ],
                 )
@@ -225,11 +239,15 @@ class _BodyState extends State<_Body> {
                     Expanded(
                       child: Container(),
                     ),
-                    Text(o['f_carnumber'],
+          Icon(Icons.car_repair_outlined),
+          SizedBox(
+            width: 150,
+            child: Text(o['f_carnumber'],
+                        textAlign: TextAlign.right,
                         style: const TextStyle(
-                            color: Colors.white,
+                            color: Colors.black,
                             fontWeight: FontWeight.bold,
-                            fontSize: 20)),
+                            fontSize: 20))),
                   ],
                 ),
                 Column(
@@ -237,7 +255,16 @@ class _BodyState extends State<_Body> {
                     for (final i in o['f_items'] ?? []) ...[
                       Row(
                         children: [
-                          Text('${i['f_part2name']} ${i['f_dishname']}')
+                          Text('${i['f_part2name']} ${i['f_dishname']}'),
+                          Expanded(child: Container()),
+                          Icon(Icons.access_alarm_rounded),
+                          SizedBox(
+                              width: 150,
+                              child:Text('${dateTimeToTimeStr(o['f_begin'])} - ${dateTimeToTimeStr(o['f_done'])}', textAlign: TextAlign.right,
+                                  style: const TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.black)))
                         ],
                       )
                     ]
