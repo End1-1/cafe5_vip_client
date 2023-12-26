@@ -2,16 +2,20 @@ import 'package:flutter/material.dart';
 
 class MTextFormField extends TextFormField {
   MTextFormField(
-      {required TextEditingController controller,
+      {super.key, required TextEditingController controller,
       int maxLines = 1,
       int minLines = 1,
       bool readOnly = false,
+      bool  autofocus = false,
+          int? maxLength,
       required String hintText})
       : super(
             controller: controller,
             maxLines: maxLines,
             minLines: minLines,
             readOnly: readOnly,
+            autofocus: autofocus,
+            maxLength: maxLength,
             decoration: InputDecoration(
                 label: Text(hintText),
                 border: const OutlineInputBorder(

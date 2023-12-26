@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 Widget globalOutlinedButton({required VoidCallback onPressed, required String title}) {
   return OutlinedButton(
@@ -28,6 +29,17 @@ String durationToString(int i, String h, String m) {
   int hour = i ~/ 60;
   int min = i % 60;
   return '${hour>0 ? '$hour$h' : '' } ${min>0 ? '$min$m' : ''}';
+}
+
+DateTime strToDateTime(String dateTime) {
+  return DateFormat('yyyy-MM-dd HH:mm:ss').parse(dateTime);
+}
+
+String processDuration(String begin, int duration, String h, String m) {
+  DateTime b = strToDateTime(begin);
+  DateTime now = DateTime.now();
+  Duration diff = now.difference(b);
+  return durationToString(diff.inMinutes, h, m);
 }
 
 final RegExp doubleRegExp = RegExp(r'([.]*0)(?!.*\d)');

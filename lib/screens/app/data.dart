@@ -12,6 +12,13 @@ class Data {
   // basket
   final List<Map<String, dynamic>> basket = [];
 
+  // current works
+  final List<dynamic> tables = [];
+  final List<dynamic> works = [];
+
+  //translation
+  final Map<String, Map<String, String>> translation = {};
+
   void setItemQty(Map<String, dynamic> data) {
     int index = basket.indexWhere((element) => element['f_uuid'] == data['f_uuid']);
     if (index < 0) {
@@ -24,5 +31,12 @@ class Data {
     int index = basket.indexWhere((element) => element['f_uuid'] == data['f_uuid']);
     basket.removeAt(index);
     model.basketController.add(basket.length);
+  }
+
+  void countWorksStartEnd() {
+    var lastDate = DateTime.now();
+    for (final e in tables) {
+      e['f_exclude'] = false;
+    }
   }
 }

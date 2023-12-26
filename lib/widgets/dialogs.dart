@@ -38,7 +38,7 @@ class Dialogs {
 
   static Future<bool?> question(String text, AppModel model) async {
     return await showDialog(
-        barrierDismissible: true,
+        barrierDismissible: false,
         useSafeArea: true,
         context: Prefs.navigatorKey.currentContext!,
         builder: (context) {
