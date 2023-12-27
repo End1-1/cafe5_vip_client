@@ -4,6 +4,7 @@ import 'package:cafe5_vip_client/screens/basket.dart';
 import 'package:cafe5_vip_client/screens/car_number.dart';
 import 'package:cafe5_vip_client/screens/dishes.dart';
 import 'package:cafe5_vip_client/screens/process.dart';
+import 'package:cafe5_vip_client/screens/process_end.dart';
 import 'package:cafe5_vip_client/screens/settings.dart';
 import 'package:cafe5_vip_client/screens/welcome.dart';
 import 'package:cafe5_vip_client/utils/global.dart';
@@ -23,11 +24,13 @@ class AppModel {
   static const query_get_process_list = 3;
   static const query_end_order = 4;
   static const query_start_order = 5;
+  static const query_update_duration = 6;
 
   final settingsServerAddressController = TextEditingController();
   final menuCodeController = TextEditingController();
   final modeController = TextEditingController();
   final carNumberController = TextEditingController();
+  final showUnpaidController = TextEditingController();
 
   final basketController = StreamController.broadcast();
   final dialogController = StreamController();
@@ -89,8 +92,9 @@ class AppModel {
     Dialogs.getPin().then((value) {
       if ((value ?? '') == '1981') {
         settingsServerAddressController.text = prefs.string('serveraddress');
-        menuCodeController.text = prefs.string("menucode");
-        modeController.text = prefs.string("appmode");
+        menuCodeController.text = prefs.string('menucode');
+        modeController.text = prefs.string('appmode');
+        showUnpaidController.text = prefs.string('showunpaid');
         Navigator.push(Prefs.navigatorKey.currentContext!,
             MaterialPageRoute(builder: (builder) => SettingsScreen(this)));
       }
@@ -106,6 +110,7 @@ class AppModel {
     prefs.setString('serveraddress', settingsServerAddressController.text);
     prefs.setString('menucode', menuCodeController.text);
     prefs.setString('appmode', modeController.text);
+    prefs.setString('showunpaid', showUnpaidController.text);
     navHome();
   }
 
@@ -184,15 +189,15 @@ class AppModel {
   }
 
   void endOrder(Map<String, dynamic> o) {
-    Dialogs.question(tr('End order?'), this).then((value) {
-      if (value ?? false) {
-        httpQuery(query_end_order, {
-          'query': query_call_function,
-          'function': 'sf_end_order',
-          'params': o
-        });
-      }
-    });
+    ProcessEndScreen.show(o, this);
+  }
+
+  void updateDuration(Map<String, dynamic> o) {
+      httpQuery(query_update_duration, {
+        'query': query_call_function,
+        'function':'sf_update_duration',
+        'params':o
+      });
   }
 
   void httpOk(int code, dynamic data) {
@@ -234,14 +239,28 @@ class AppModel {
     }
   }
 
-  Future<void> httpQuery(int code, Map<String, dynamic> params) async {
-    dialogController.add(0);
-    for (var e in params['params'].entries) {
+  void correctJson(Map<String, dynamic> m) {
+    for (var e in m.entries) {
       if (e.value is DateTime) {
-        params['params']![e.key] = dateTimeToStr(e.value);
+        m![e.key] = dateTimeToStr(e.value);
+      } else if (e.value is Map) {
+        correctJson(e.value);
+      } else if (e.value is List) {
+        for (final l in e.value) {
+          if (l is Map<String, dynamic>) {
+            correctJson(l!);
+          }
+        }
       }
     }
-    final queryResult = await HttpQuery().request(params);
+  }
+
+  Future<void> httpQuery(int code, Map<String, dynamic> params) async {
+    dialogController.add(0);
+    Map<String, dynamic> copy = {};
+    copy.addAll(params);
+    correctJson(copy['params']);
+    final queryResult = await HttpQuery().request(copy);
     Navigator.pop(Loading.dialogContext);
     if (queryResult['status'] == 1) {
       httpOk(code, queryResult['data']);

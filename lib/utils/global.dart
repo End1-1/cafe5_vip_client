@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:typed_data';
 
+import 'package:cafe5_vip_client/utils/prefs.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -23,6 +24,19 @@ alignment: Alignment.center,
 Image imageFromBase64(String base64str, {double? width, double? height}) {
   Uint8List data = base64Decode(base64str);
   return Image.memory(data, width: width, height: height,);
+}
+
+Future<DateTime?> selectDate() async {
+   return await showDatePicker(
+      context: Prefs.navigatorKey.currentContext!,
+      initialDate: DateTime.now(),
+      firstDate: DateTime.now(),
+      lastDate: DateTime.now().add(const Duration(days: 90)));
+}
+
+Future<TimeOfDay?> selectTime() async {
+  return await showTimePicker(
+      context: Prefs.navigatorKey.currentContext!, initialTime: TimeOfDay.now());
 }
 
 String durationToString(int i, String h, String m) {

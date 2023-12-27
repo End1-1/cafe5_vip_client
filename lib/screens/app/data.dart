@@ -35,7 +35,6 @@ class Data {
   }
 
   void countWorksStartEnd() {
-    var lastDate = DateTime.now();
     List<DateTime> times = List<DateTime>.filled(tables.length, DateTime.now());
     Map<int, int> tablesTimeMap = {};
     for (int i = 0; i < tables.length; i++) {
@@ -45,8 +44,9 @@ class Data {
     for (final e in works) {
       if (e['f_state'] == 1) {
         final i = e['f_items'].first;
-        e['f_done'] = strToDateTime(i['f_begin']).add(Duration(minutes: i['f_cookingtime']));
-        times[tablesTimeMap[e['f_table']]!] = e['f_done'];
+        i['f_done'] = strToDateTime(i['f_begin']).add(Duration(minutes: i['f_cookingtime']));
+        e['f_done'] = i['f_done'];
+        times[tablesTimeMap[e['f_table']]!] = i['f_done'];
       }
     }
     //fill pending

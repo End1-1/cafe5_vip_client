@@ -24,7 +24,11 @@ class SettingsScreen extends AppScreen {
       const SizedBox(height: 10),
       Row(children:[
         Expanded(child: MTextFormField(controller: model.modeController, hintText: model.tr('Application mode')))
-      ])
+      ]),
+      const SizedBox(height: 10),
+      Row(children:[
+        Expanded(child: MTextFormField(controller: model.showUnpaidController, hintText: model.tr('Show unpaid')))
+      ]),
     ],
   );
   }

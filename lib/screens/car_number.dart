@@ -1,4 +1,5 @@
 import 'package:cafe5_vip_client/screens/app/screen.dart';
+import 'package:cafe5_vip_client/screens/widgets/booking.dart';
 import 'package:cafe5_vip_client/utils/global.dart';
 import 'package:cafe5_vip_client/utils/prefs.dart';
 import 'package:cafe5_vip_client/widgets/text_form_field.dart';
@@ -34,6 +35,9 @@ class CarNumberScreen extends AppScreen {
                     autofocus: true))
           ],
         ),
+        Row(children: [
+          Expanded(child: Booking(model))
+        ]),
         Expanded(child: Container()),
         Container(
             padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
