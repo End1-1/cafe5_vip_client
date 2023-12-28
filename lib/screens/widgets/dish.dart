@@ -35,8 +35,8 @@ class Dish extends StatelessWidget {
                 height: model.screenSize!.width * model.screenMultiple,
                 width: model.screenSize!.width * model.screenMultiple,
                 child: data['f_image'].isEmpty
-                    ? Icon(Icons.not_interested_outlined,
-                    size: model.screenSize!.width * model.screenMultiple)
+                    ? FittedBox(child: Icon(Icons.not_interested_outlined,
+                    size: model.screenSize!.width * model.screenMultiple))
                     : imageFromBase64(data['f_image'],
                     width: model.screenSize!.width * model.screenMultiple)),
         Text(data['f_name'],

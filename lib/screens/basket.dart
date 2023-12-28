@@ -1,5 +1,6 @@
 import 'package:cafe5_vip_client/screens/app/screen.dart';
 import 'package:cafe5_vip_client/screens/widgets/dish_basket.dart';
+import 'package:cafe5_vip_client/screens/widgets/payment.dart';
 import 'package:cafe5_vip_client/utils/global.dart';
 import 'package:cafe5_vip_client/utils/prefs.dart';
 import 'package:flutter/material.dart';
@@ -29,11 +30,13 @@ class BasketScreen extends AppScreen {
           if (model.appdata.basket.isEmpty) {
             return Center(child: Text(model.tr('Your basket is empty')));
           }
+          model.appdata.basketTotal();
           return Column(
             children: [
               Expanded(
                   child: SingleChildScrollView(
                 child: Wrap(spacing: 5, runSpacing: 5, children: [
+                  const SizedBox(height: 5,),
                   for (final b in model.appdata.basket) ...[
                     DishBasket(b, model, false),
                     const SizedBox(
@@ -45,14 +48,16 @@ class BasketScreen extends AppScreen {
               const SizedBox(
                 height: 5,
               ),
+              Payment(model.appdata.basketData, model),
+              const SizedBox(height: 5,),
               if (model.appdata.basket.isNotEmpty)
                 Container(
-                    padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
                     height: kButtonHeight,
                     alignment: Alignment.center,
                     child: globalOutlinedButton(
                         onPressed: model.processOrder,
-                        title: model.tr('Order')))
+                        title: model.tr('Order'))),
+              const SizedBox(height: 5,),
             ],
           );
         });

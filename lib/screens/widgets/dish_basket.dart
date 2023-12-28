@@ -18,7 +18,7 @@ class DishBasket extends StatelessWidget {
     return Container(
         padding: const EdgeInsets.fromLTRB(5, 5, 5, 5),
         color: Colors.indigo,
-        width: model.screenSize!.width * 0.45,
+        width: model.screenSize!.width < 500 ? model.screenSize!.width * 0.9 : model.screenSize!.width * 0.45,
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           Row(children: [
             Expanded(
@@ -31,8 +31,8 @@ class DishBasket extends StatelessWidget {
                     height: model.screenSize!.width * model.screenMultiple,
                     width: model.screenSize!.width * model.screenMultiple,
                     child: data['f_image'].isEmpty
-                        ? Icon(Icons.not_interested_outlined,
-                            size: model.screenSize!.width * model.screenMultiple)
+                        ? FittedBox(child: Icon(Icons.not_interested_outlined,
+                            size: model.screenSize!.width * model.screenMultiple))
                         : imageFromBase64(data['f_image'],
                             width: model.screenSize!.width * model.screenMultiple)))
           ]),
@@ -71,15 +71,21 @@ class DishBasket extends StatelessWidget {
           const SizedBox(
             height: 10,
           ),
-          Row(children: [
-            DishQty( (q) {
+          Row(children:[Expanded(child: Wrap(
+            alignment: WrapAlignment.start,
+            crossAxisAlignment: WrapCrossAlignment.center,
+              runAlignment: WrapAlignment.center,
+              children: [
+            Container(
+              constraints: BoxConstraints(maxWidth: 200),
+                child: DishQty( (q) {
                         data['f_qty'] = q;
                         model.appdata.setItemQty(data);
                       },
-                data['f_qty'] ?? 1),
-            Expanded(child: Container()),
-            Expanded(
-                child: Container(
+                data['f_qty'] ?? 1))])),
+
+             Container(
+                    constraints: BoxConstraints(maxWidth: 150),
                     height: kButtonHeight,
                     alignment: Alignment.center,
                     child: mode
@@ -93,7 +99,7 @@ class DishBasket extends StatelessWidget {
                             onPressed: () {
                               model.appdata.removeBasketItem(data);
                             },
-                            title: model.tr('Remove'))))
+                            title: model.tr('Remove')))
           ])
         ]));
   }

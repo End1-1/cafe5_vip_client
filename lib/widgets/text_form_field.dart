@@ -8,7 +8,7 @@ class MTextFormField extends TextFormField {
       bool readOnly = false,
       bool  autofocus = false,
           int? maxLength,
-      required String hintText})
+      required String hintText, super.style})
       : super(
             controller: controller,
             maxLines: maxLines,

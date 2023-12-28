@@ -19,6 +19,14 @@ class SettingsScreen extends AppScreen {
     ]),
       const SizedBox(height: 10),
       Row(children:[
+        Expanded(child: MTextFormField(controller: model.titleController, hintText: model.tr('Title')))
+      ]),
+      const SizedBox(height: 10),
+      Row(children:[
+        Expanded(child: MTextFormField(controller: model.configController, hintText: model.tr('Config')))
+      ]),
+      const SizedBox(height: 10),
+      Row(children:[
         Expanded(child: MTextFormField(controller: model.menuCodeController, hintText: model.tr('Menu code')))
       ]),
       const SizedBox(height: 10),
@@ -28,6 +36,11 @@ class SettingsScreen extends AppScreen {
       const SizedBox(height: 10),
       Row(children:[
         Expanded(child: MTextFormField(controller: model.showUnpaidController, hintText: model.tr('Show unpaid')))
+      ]),
+
+      const SizedBox(height: 10),
+      Row(children:[
+        Expanded(child: MTextFormField(controller: model.tableController, hintText: model.tr('Table')))
       ]),
     ],
   );

@@ -50,6 +50,7 @@ class _DishQtyState extends State<DishQty> {
               }
             },
             icon: const Icon(Icons.exposure_minus_1, color: Colors.white)),
+        Expanded(child: Container()),
       ],
     );
   }

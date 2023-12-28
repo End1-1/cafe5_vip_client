@@ -28,6 +28,7 @@ class Part2 extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
               children: [
             Container(
+              clipBehavior:  Clip.hardEdge,
               padding: const EdgeInsets.all(5),
                 alignment: Alignment.center,
                 decoration: const BoxDecoration(color: Colors.white,
@@ -35,15 +36,16 @@ class Part2 extends StatelessWidget {
                 height: model.screenSize!.width * model.screenMultiple,
                 width: model.screenSize!.width * model.screenMultiple,
                 child: data['f_image'].isEmpty
-                    ? Icon(Icons.not_interested_outlined,
-                        size: model.screenSize!.width * model.screenMultiple)
-                    : imageFromBase64(data['f_image'],
-                        width: model.screenSize!.width * model.screenMultiple)),
-            Text(data['f_name'],
+                    ? FittedBox(child: Icon(Icons.not_interested_outlined,
+                        size: model.screenSize!.width * model.screenMultiple))
+                    : FittedBox(child: imageFromBase64(data['f_image'],
+                        width: model.screenSize!.width * model.screenMultiple,
+                    height: model.screenSize!.width * model.screenMultiple))),
+            Expanded(child: Center(child: Text(data['f_name'],
                 style: const TextStyle(
                     color: Colors.white,
                     fontWeight: FontWeight.bold,
-                    fontSize: 18))
+                    fontSize: 18))))
           ]),
         ));
   }

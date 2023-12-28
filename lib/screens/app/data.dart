@@ -12,13 +12,23 @@ class Data {
 
   // basket
   final List<Map<String, dynamic>> basket = [];
+  final Map<String, dynamic> basketData = {};
+  double basketTotal() {
+    var total = 0.0;
+      for (final i in basket) {
+        total += i['f_qty'] * i['f_price'];
+      }
+
+    basketData['f_amounttotal'] = total;
+    return total;
+  }
 
   // current works
   final List<dynamic> tables = [];
   final List<dynamic> works = [];
 
   //translation
-  final Map<String, Map<String, String>> translation = {};
+  final Map<String, Map<String, dynamic>> translation = {};
 
   void setItemQty(Map<String, dynamic> data) {
     int index = basket.indexWhere((element) => element['f_uuid'] == data['f_uuid']);
@@ -26,6 +36,7 @@ class Data {
       return;
     }
     basket[index] = data;
+    model.basketController.add(basket.length);
   }
 
   void removeBasketItem(Map<String, dynamic> data) {

@@ -9,6 +9,7 @@ Widget globalOutlinedButton({required VoidCallback onPressed, required String ti
   return OutlinedButton(
       onPressed: onPressed,
       style: OutlinedButton.styleFrom(
+        padding: EdgeInsets.zero,
 alignment: Alignment.center,
           backgroundColor: Colors.indigo,
           shape: const RoundedRectangleBorder(

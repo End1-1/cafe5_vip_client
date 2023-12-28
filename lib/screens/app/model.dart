@@ -26,11 +26,14 @@ class AppModel {
   static const query_start_order = 5;
   static const query_update_duration = 6;
 
+  final titleController = TextEditingController();
   final settingsServerAddressController = TextEditingController();
+  final configController = TextEditingController();
   final menuCodeController = TextEditingController();
   final modeController = TextEditingController();
   final carNumberController = TextEditingController();
   final showUnpaidController = TextEditingController();
+  final tableController = TextEditingController();
 
   final basketController = StreamController.broadcast();
   final dialogController = StreamController();
@@ -38,7 +41,7 @@ class AppModel {
   late final Data appdata;
 
   Size? screenSize;
-  var screenMultiple = 0.3;
+  var screenMultiple = 0.43;
 
   AppModel() {
     appdata = Data(this);
@@ -78,6 +81,9 @@ class AppModel {
         'params': <String, dynamic>{'f_en': key}
       });
     }
+    if (appdata.translation[key]!['f_am'].isEmpty) {
+      return key;
+    }
     return appdata.translation[key]!['f_am']!;
   }
 
@@ -95,6 +101,9 @@ class AppModel {
         menuCodeController.text = prefs.string('menucode');
         modeController.text = prefs.string('appmode');
         showUnpaidController.text = prefs.string('showunpaid');
+        tableController.text = prefs.string('table');
+        configController.text = prefs.string('config');
+        titleController.text = prefs.string('title');
         Navigator.push(Prefs.navigatorKey.currentContext!,
             MaterialPageRoute(builder: (builder) => SettingsScreen(this)));
       }
@@ -111,7 +120,15 @@ class AppModel {
     prefs.setString('menucode', menuCodeController.text);
     prefs.setString('appmode', modeController.text);
     prefs.setString('showunpaid', showUnpaidController.text);
-    navHome();
+    prefs.setString('table', tableController.text);
+    prefs.setString('title', titleController.text);
+    prefs.setString('config', configController.text);
+    httpQuery(query_init, {'query': query_init,
+    'params': <String, dynamic>{
+    'f_menu': int.tryParse(prefs.string('menucode')) ?? 0}}).then((value) {
+      navHome();
+    });
+
   }
 
   void navDishes(filter) {
@@ -140,6 +157,10 @@ class AppModel {
     }
     Navigator.push(Prefs.navigatorKey.currentContext!,
         MaterialPageRoute(builder: (builder) => BasketScreen(this)));
+  }
+
+  void callStaff() {
+
   }
 
   void addToBasket(Map<String, dynamic> data) {
@@ -203,6 +224,11 @@ class AppModel {
   void httpOk(int code, dynamic data) {
     switch (code) {
       case query_init:
+        appdata.part1.clear();
+        appdata.part2.clear();
+        appdata.dish.clear();
+        appdata.tables.clear();
+        appdata.translation.clear();
         for (final e in data['part1']) {
           appdata.part1.add(e);
         }
@@ -214,6 +240,9 @@ class AppModel {
         }
         for (final e in data['tables']) {
           appdata.tables.add(e);
+        }
+        for (final e in data['translator']) {
+          appdata.translation[e['f_en']] = e;
         }
         break;
       case query_create_order:
@@ -259,6 +288,9 @@ class AppModel {
     dialogController.add(0);
     Map<String, dynamic> copy = {};
     copy.addAll(params);
+    if (!copy.containsKey('params')) {
+      copy['params'] = {};
+    }
     correctJson(copy['params']);
     final queryResult = await HttpQuery().request(copy);
     Navigator.pop(Loading.dialogContext);
