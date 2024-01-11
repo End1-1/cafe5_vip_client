@@ -238,7 +238,7 @@ class AppModel {
         for (final e in data['dish']) {
           appdata.dish.add(e);
         }
-        for (final e in data['tables']) {
+        for (final e in data['tables'] ?? []) {
           appdata.tables.add(e);
         }
         for (final e in data['translator']) {
