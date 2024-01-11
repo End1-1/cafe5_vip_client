@@ -18,7 +18,7 @@ class WelcomeScreen extends AppScreen {
       toolbarHeight: kToolbarHeight,
       title: Text(prefs.appTitle()),
       actions: [
-        IconButton(onPressed: model.callStaff, icon: Icon(Icons.add_alert_outlined)),
+        IconButton(onPressed: model.callStaff, icon: Icon(Icons.help_outline_rounded)),
         IconButton(
             onPressed: model.navBasket,
             icon: SizedBox(
