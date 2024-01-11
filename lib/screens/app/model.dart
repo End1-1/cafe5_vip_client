@@ -55,6 +55,9 @@ class AppModel {
   }
 
   void configScreenSize() {
+    if (screenSize!.width > 500) {
+      screenMultiple = 0.3;
+    } else
     if (screenSize!.width >= 1240) {
       screenMultiple = 0.2;
     }
@@ -235,7 +238,7 @@ class AppModel {
         for (final e in data['part2']) {
           appdata.part2.add(e);
         }
-        for (final e in data['dish']) {
+        for (final e in data['dish'] ?? []) {
           appdata.dish.add(e);
         }
         for (final e in data['tables']) {

@@ -18,7 +18,7 @@ class DishBasket extends StatelessWidget {
     return Container(
         padding: const EdgeInsets.fromLTRB(5, 5, 5, 5),
         color: Colors.indigo,
-        width: model.screenSize!.width < 500 ? model.screenSize!.width * 0.9 : model.screenSize!.width * 0.45,
+        width: model.screenSize!.width < 600 ? model.screenSize!.width * 0.9 : model.screenSize!.width * 0.45,
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           Row(children: [
             Expanded(
