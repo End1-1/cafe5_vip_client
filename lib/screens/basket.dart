@@ -35,7 +35,7 @@ class BasketScreen extends AppScreen {
             children: [
               Expanded(
                   child: SingleChildScrollView(
-                child: Wrap(spacing: 5, runSpacing: 5, children: [
+                child: Wrap(runSpacing: 5, children: [
                   const SizedBox(height: 5,),
                   for (final b in model.appdata.basket) ...[
                     DishBasket(b, model, false),
