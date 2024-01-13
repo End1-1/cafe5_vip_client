@@ -10,6 +10,8 @@ class HttpQuery {
       inData['params'] = <String, dynamic>{};
     }
     inData['params']!['apikey'] = prefs.string("apikey");
+    inData['config'] = prefs.string('config');
+    inData['language'] = 'am';
 
     Map<String, Object?> outData = {};
     String strBody = jsonEncode(inData);
@@ -29,7 +31,7 @@ class HttpQuery {
                 //     "Origin, X-Requested-With, Content-Type, Accept"
               },
               body: utf8.encode(strBody))
-          .timeout(const Duration(seconds: 10), onTimeout: () {
+          .timeout(const Duration(seconds: 120), onTimeout: () {
         return http.Response('Timeout', 408);
       });
       String strResponse = utf8.decode(response.bodyBytes);

@@ -10,7 +10,7 @@ extension Prefs on SharedPreferences {
   }
 
   String appTitle() {
-    return 'KinoparkFood';
+    return string('title');
   }
 }
 

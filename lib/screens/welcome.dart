@@ -4,7 +4,6 @@ import 'package:cafe5_vip_client/utils/prefs.dart';
 import 'package:flutter/material.dart';
 
 class WelcomeScreen extends AppScreen {
-
   const WelcomeScreen(super.model, {super.key});
 
   @override
@@ -18,7 +17,8 @@ class WelcomeScreen extends AppScreen {
       toolbarHeight: kToolbarHeight,
       title: Text(prefs.appTitle()),
       actions: [
-        IconButton(onPressed: model.callStaff, icon: Icon(Icons.help_outline_rounded)),
+        IconButton(
+            onPressed: model.callStaff, icon: Icon(Icons.help_outline_rounded)),
         IconButton(
             onPressed: model.navBasket,
             icon: SizedBox(
@@ -50,20 +50,24 @@ class WelcomeScreen extends AppScreen {
                       })
                 ]))),
         PopupMenuButton(
-            icon: const Icon(Icons.settings_outlined), itemBuilder: (BuildContext context) { 
-              return [
-                PopupMenuItem(child: ListTile(
-                  leading: Icon(Icons.settings_outlined),
-                  title: Text(model.tr('Options')),
-                  onTap: model.navSettings,
-                )),
-                PopupMenuItem(child: ListTile(
-                  leading: Icon(Icons.monitor),
-                  title: Text(model.tr('Process')),
-                  onTap: model.navProcess,
-                ))
-              ];
-        },)
+          icon: const Icon(Icons.settings_outlined),
+          itemBuilder: (BuildContext context) {
+            return [
+              PopupMenuItem(
+                  child: ListTile(
+                leading: Icon(Icons.settings_outlined),
+                title: Text(model.tr('Options')),
+                onTap: model.navSettings,
+              )),
+              PopupMenuItem(
+                  child: ListTile(
+                leading: Icon(Icons.monitor),
+                title: Text(model.tr('Process')),
+                onTap: model.navProcess,
+              ))
+            ];
+          },
+        )
       ],
     );
   }
@@ -72,15 +76,25 @@ class WelcomeScreen extends AppScreen {
   Widget body() {
     return Column(
       children: [
-        Expanded(child: SingleChildScrollView(
-          child: Align(alignment: Alignment.center, child:  Wrap(
-            direction: Axis.horizontal,
-            children: [
-              for (final e in model.appdata.part2) ... [
-                Part2(e, model)
-              ]
-            ],
-          )),
+        Expanded(
+            child: SingleChildScrollView(
+          child: Align(
+              alignment: Alignment.center,
+              child: Column(children: [
+                for (final p1 in model.appdata.part1List()) ...[
+                  Row(children: [
+                    Expanded(child: Container(
+                      child: Text(p1['f_name'], textAlign: TextAlign.center,  style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold))
+                    ))
+                  ],),
+                  Wrap(
+                    direction: Axis.horizontal,
+                    children: [
+                      for (final e in model.appdata.part2List(p1['f_id'])) ...[Part2(e, model)]
+                    ],
+                  )
+                ]
+              ])),
         ))
       ],
     );

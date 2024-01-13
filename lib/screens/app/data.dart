@@ -1,5 +1,6 @@
 import 'package:cafe5_vip_client/screens/app/model.dart';
 import 'package:cafe5_vip_client/utils/global.dart';
+import 'package:cafe5_vip_client/widgets/dialogs.dart';
 
 class Data {
   final AppModel model;
@@ -30,6 +31,33 @@ class Data {
   //translation
   final Map<String, Map<String, dynamic>> translation = {};
 
+  List<Map<String, dynamic>> part1List() {
+    final l = <Map<String, dynamic>>[];
+    for (final p1 in part1) {
+      for (final p2 in part2) {
+        if (p2['f_part'] == p1['f_id']) {
+          l.add(p1);
+          break;
+        }
+      }
+    }
+    return l;
+  }
+
+  List<Map<String, dynamic>> part2List(int p1) {
+    final l = <Map<String, dynamic>>[];
+    for (final p2 in part2) {
+      if (p2['f_part'] == p1) {
+        l.add(p2);
+      }
+    }
+    return l;
+  }
+
+  Map<String, dynamic> tableOfIndex(int index) {
+    return tables[index];
+  }
+
   void setItemQty(Map<String, dynamic> data) {
     int index = basket.indexWhere((element) => element['f_uuid'] == data['f_uuid']);
     if (index < 0) {
@@ -46,10 +74,15 @@ class Data {
   }
 
   void countWorksStartEnd() {
+    final reassingTablesList = <Map<String,dynamic>>[];
     List<DateTime> times = List<DateTime>.filled(tables.length, DateTime.now());
     Map<int, int> tablesTimeMap = {};
     for (int i = 0; i < tables.length; i++) {
       tablesTimeMap[tables[i]['f_id']] = i;
+    }
+    if (tablesTimeMap.isEmpty) {
+      Dialogs.show(model.tr('Hall not configured'));
+      return;
     }
     //fill in progress
     for (final e in works) {
@@ -81,10 +114,27 @@ class Data {
         }
       }
       //assign work to finded box
+      final t = tableOfIndex(box);
+      if (w['f_table'] != t['f_id']) {
+        reassingTablesList.add({'f_order': w['f_id'], 'f_table' : t['f_id']});
+      }
+      w['f_table'] = t['f_id'];
+      w['f_tablename'] = t['f_name'];
       final wi = w['f_items'].first;
       w['f_begin'] = boxTime;
       w['f_done'] = boxTime.add(Duration(minutes: wi['f_cookingtime']));
       times[box] = times[box].add(Duration(minutes: wi['f_cookingtime']));
+    }
+
+    //reassing tables
+    if (reassingTablesList.isNotEmpty) {
+      model.httpQuery(AppModel.query_reassign_table, {
+        'query': AppModel.query_call_function,
+        'function': 'sf_reassign_tables',
+        'params': <String,dynamic>{
+          'list': reassingTablesList
+        }
+      });
     }
   }
 }

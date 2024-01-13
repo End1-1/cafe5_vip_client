@@ -27,8 +27,11 @@ class ProcessStartScreen {
                     }
                     tables = snapshot.data;
                     if (tables.isNotEmpty) {
-                      o['f_tablename'] = tables.first['f_name'];
-                      o['f_table'] = tables.first['f_id'];
+                      Map<String, dynamic> t = tables.firstWhere((element) => element['f_id'] == o['f_table'], orElse: () => null);
+                      if (t == null) {
+                        o['f_tablename'] = tables.first['f_name'];
+                        o['f_table'] = tables.first['f_id'];
+                      }
                     } else {
                       o['f_table'] = 0;
                     }

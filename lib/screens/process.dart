@@ -118,7 +118,7 @@ class _BodyState extends State<_Body> {
                                       CrossAxisAlignment.stretch,
                                   children: [
                                     for (final o in snapshot.data ?? []) ...[
-                                      if (o['f_state'] == 1) ...[
+                                      if (o['f_state'] == 1 || o['f_state'] == 2) ...[
                                         processWidget(o),
                                         const Divider(
                                             color: Colors.white,
@@ -132,7 +132,7 @@ class _BodyState extends State<_Body> {
                               color: Colors.orange,
                               child: Column(children: [
                                 for (final o in snapshot.data ?? []) ...[
-                                  if (o['f_state'] != 1) ...[
+                                  if (o['f_state'] ==5) ...[
                                     pendingWidget(o),
                                     const Divider(
                                         color: Colors.white,
@@ -154,7 +154,7 @@ class _BodyState extends State<_Body> {
         child: Container(
             padding: const EdgeInsets.all(5),
             margin: const EdgeInsets.fromLTRB(5, 5, 5, 5),
-            decoration: const BoxDecoration(color: Color(0xff94a5ba)),
+            decoration: BoxDecoration(color: o['f_state'] == 1 ? const Color(0xff94a5ba) : const Color(0xffaaeeaa)),
             child: Column(
               children: [
                 Row(
@@ -167,7 +167,7 @@ class _BodyState extends State<_Body> {
                           fontSize: 20),
                     ),
                     Expanded(child: Container()),
-                    Icon(Icons.car_repair_outlined),
+                    const Icon(Icons.car_repair_outlined),
                     SizedBox(
                         width: 100,
                         child: Text(o['f_carnumber'],
@@ -200,7 +200,7 @@ class _BodyState extends State<_Body> {
                       ),
                       Row(children: [
                         Expanded(child: Container()),
-                        Icon(Icons.access_alarm_rounded),
+                        const Icon(Icons.access_alarm_rounded),
     SizedBox(
     width: 100,
     child:Text('${dateTimeToTimeStr(o['f_done'])}', textAlign: TextAlign.right,
@@ -239,7 +239,7 @@ class _BodyState extends State<_Body> {
                     Expanded(
                       child: Container(),
                     ),
-          Icon(Icons.car_repair_outlined),
+          const Icon(Icons.car_repair_outlined),
           SizedBox(
             width: 150,
             child: Text(o['f_carnumber'],
@@ -257,7 +257,7 @@ class _BodyState extends State<_Body> {
                         children: [
                           Text('${i['f_part2name']} ${i['f_dishname']}'),
                           Expanded(child: Container()),
-                          Icon(Icons.access_alarm_rounded),
+                          const Icon(Icons.access_alarm_rounded),
                           SizedBox(
                               width: 150,
                               child:Text('${dateTimeToTimeStr(o['f_begin'])} - ${dateTimeToTimeStr(o['f_done'])}', textAlign: TextAlign.right,
@@ -277,7 +277,7 @@ class _BodyState extends State<_Body> {
   @override
   void initState() {
     super.initState();
-    _timer = Timer.periodic(const Duration(seconds: 15), timerFunction);
+    _timer = Timer.periodic(const Duration(seconds: 30), timerFunction);
   }
 
   @override

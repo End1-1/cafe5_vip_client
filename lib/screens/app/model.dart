@@ -25,6 +25,8 @@ class AppModel {
   static const query_end_order = 4;
   static const query_start_order = 5;
   static const query_update_duration = 6;
+  static const query_reassign_table = 7;
+  static const query_payment = 8;
 
   final titleController = TextEditingController();
   final settingsServerAddressController = TextEditingController();
@@ -63,7 +65,7 @@ class AppModel {
     }
   }
 
-  Future<void> initModel() async {
+  Future<String> initModel() async {
     final queryResult = await HttpQuery().request({
       'query': query_init,
       'params': <String, dynamic>{
@@ -72,7 +74,10 @@ class AppModel {
     });
     if (queryResult['status'] == 1) {
       httpOk(query_init, queryResult['data']);
-    } else {}
+      return '';
+    } else {
+      return queryResult['data'];
+    }
   }
 
   String tr(String key) {
@@ -213,7 +218,11 @@ class AppModel {
   }
 
   void endOrder(Map<String, dynamic> o) {
-    ProcessEndScreen.show(o, this);
+    ProcessEndScreen.show(o, this).then((value) {
+      if (value ?? false) {
+        getProcessList();
+      }
+    });
   }
 
   void updateDuration(Map<String, dynamic> o) {
@@ -232,10 +241,10 @@ class AppModel {
         appdata.dish.clear();
         appdata.tables.clear();
         appdata.translation.clear();
-        for (final e in data['part1']) {
+        for (final e in data['part1'] ?? []) {
           appdata.part1.add(e);
         }
-        for (final e in data['part2']) {
+        for (final e in data['part2'] ?? []) {
           appdata.part2.add(e);
         }
         for (final e in data['dish'] ?? []) {
@@ -244,7 +253,7 @@ class AppModel {
         for (final e in data['tables'] ?? []) {
           appdata.tables.add(e);
         }
-        for (final e in data['translator']) {
+        for (final e in data['translator'] ?? []) {
           appdata.translation[e['f_en']] = e;
         }
         break;

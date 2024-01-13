@@ -8,25 +8,37 @@ import 'package:flutter/material.dart';
 import 'app/model.dart';
 
 class ProcessEndScreen {
-  static void show(Map<String, dynamic> o, AppModel model) async {
-    return await showDialog(context: Prefs.navigatorKey.currentContext!, builder: (BuildContext context) {
-      return SimpleDialog(
-        contentPadding: const EdgeInsets.all(10),
-        children: [
-          _ProcessScreenWidget(o, model),
-        ],
-      );
-    }).then((value) {
+  static Future<bool?> show(Map<String, dynamic> o, AppModel model) async {
+    return await showDialog(
+        context: Prefs.navigatorKey.currentContext!,
+        builder: (BuildContext context) {
+          return SimpleDialog(
+            contentPadding: const EdgeInsets.all(10),
+            children: [
+              _ProcessScreenWidget(o, model),
+            ],
+          );
+        }).then((value) async {
       if (value ?? false) {
-        Dialogs.question(model.tr('End order?'), model).then((value) async {
-          if (value ?? false) {
-            await model.httpQuery(AppModel.query_end_order, {
-              'query': AppModel.query_call_function,
-              'function': 'sf_end_order',
+        if (o['f_state'] == 1) {
+          await model.httpQuery(AppModel.query_end_order, {
+            'query': AppModel.query_call_function,
+            'function': 'sf_end_order',
+            'params': o
+          });
+          if ((o['f_amountcash'] ?? 0) + (o['f_amountcard'] ?? 0) + (o['f_amountidram'] ?? 0) > 0) {
+            await model.httpQuery(AppModel.query_payment, {
+              'query': AppModel.query_payment,
               'params': o
             });
           }
-        });
+        } else {
+          await model.httpQuery(AppModel.query_payment, {
+            'query': AppModel.query_payment,
+            'params': o
+          });
+        }
+        return true;
       } else {
         model.getProcessList();
       }
@@ -60,13 +72,13 @@ class _ProcessScreenWidgetState extends State<_ProcessScreenWidget> {
             children: [
               Row(
                 children: [
-                       Text(
-                         widget.o['f_tablename'],
-                        style: const TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 20),
-                      ),
+                  Text(
+                    widget.o['f_tablename'],
+                    style: const TextStyle(
+                        color: Colors.black,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 20),
+                  ),
                   Expanded(
                     child: Container(),
                   ),
@@ -93,14 +105,22 @@ class _ProcessScreenWidgetState extends State<_ProcessScreenWidget> {
                       ],
                     ),
                     const SizedBox(height: 10),
-                    Row(
-                      children: [
-                        Expanded(child: MTextFormField(controller: durationController, hintText: widget.model.tr('Duration'),)),
-                        IconButton(onPressed: (){
-                          widget.o['duration'] = durationController.text;
-                          widget.model.updateDuration(widget.o);}, icon: const Icon(Icons.save_outlined))
-                      ],
-                    )
+                    if (widget.o['f_state'] == 1)
+                      Row(
+                        children: [
+                          Expanded(
+                              child: MTextFormField(
+                            controller: durationController,
+                            hintText: widget.model.tr('Duration'),
+                          )),
+                          IconButton(
+                              onPressed: () {
+                                widget.o['duration'] = durationController.text;
+                                widget.model.updateDuration(widget.o);
+                              },
+                              icon: const Icon(Icons.save_outlined))
+                        ],
+                      )
                   ]
                 ],
               )
@@ -119,13 +139,26 @@ class _ProcessScreenWidgetState extends State<_ProcessScreenWidget> {
               height: kButtonHeight,
               child: globalOutlinedButton(
                   onPressed: () {
-                    Dialogs
-                        .question(widget.model.tr('End order?'), widget.model)
+                    Dialogs.question(
+                            widget.model.tr('End order?'), widget.model)
                         .then((value) {
                       if (value ?? false) {
-                        Navigator.pop(context, true);
+                        if (widget.o['f_state'] == 1) {
+                          Navigator.pop(context, true);
+                        } else {
+                          if ((widget.o['f_amountcash'] ?? 0) +
+                                  (widget.o['f_amountcard'] ?? 0) +
+                                  (widget.o['f_amountidram'] ?? 0) <
+                              (widget.o['f_amounttotal'] ?? 0)) {
+                            Dialogs.show(
+                                widget.model.tr('Select payment method'));
+                          } else {
+                            Navigator.pop(context, true);
+                          }
+                        }
                       }
-                    });},
+                    });
+                  },
                   title: widget.model.tr('Finish'))),
           const SizedBox(width: 10),
           SizedBox(
@@ -141,6 +174,4 @@ class _ProcessScreenWidgetState extends State<_ProcessScreenWidget> {
       )
     ]);
   }
-
-
 }

@@ -1,8 +1,6 @@
-import 'dart:convert';
 import 'dart:io';
 
 import 'package:cafe5_vip_client/screens/app/model.dart';
-import 'package:cafe5_vip_client/screens/app/screen.dart';
 import 'package:cafe5_vip_client/screens/welcome.dart';
 import 'package:cafe5_vip_client/utils/http_overrides.dart';
 import 'package:cafe5_vip_client/utils/prefs.dart';
@@ -10,7 +8,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:http/http.dart' as http;
 
 void main() async {
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
@@ -38,6 +35,7 @@ class App extends StatefulWidget {
 
 class _App extends State<App> {
   final AppModel _appModel = AppModel();
+  var error = '';
 
   @override
   void initState() {
@@ -57,7 +55,9 @@ class _App extends State<App> {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: WelcomeScreen(_appModel),
+      home: error.isNotEmpty
+          ? Container(child: Text(error))
+          : WelcomeScreen(_appModel),
     );
   }
 
@@ -66,10 +66,8 @@ class _App extends State<App> {
       FlutterNativeSplash.remove();
       return;
     }
-    await _appModel.initModel();
+    error = await _appModel.initModel();
     FlutterNativeSplash.remove();
-    setState(() {
-
-    });
+    setState(() {});
   }
 }
