@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:cafe5_vip_client/screens/basket.dart';
 import 'package:cafe5_vip_client/screens/car_number.dart';
@@ -52,6 +53,9 @@ class AppModel {
       if (event is int) {
         Loading.show();
       } else if (event is String) {
+        if (event.isEmpty) {
+          return;
+        }
         Dialogs.show(event);
       }
     });
@@ -68,13 +72,10 @@ class AppModel {
 
   Future<String> initModel() async {
     final queryResult = await HttpQuery().request({
-      'query': query_init,
-      'params': <String, dynamic>{
-        'f_menu': int.tryParse(prefs.string('menucode')) ?? 0
-      }
+      'sql': "select sf_vip_init('${jsonEncode({'f_menu': int.tryParse(prefs.string('menucode')) ?? 0})}')",
     });
     if (queryResult['status'] == 1) {
-      httpOk(query_init, queryResult['data']);
+      httpOk(query_init, jsonDecode(queryResult['data']['data'][0][0]));
       return '';
     } else {
       return queryResult['data'];

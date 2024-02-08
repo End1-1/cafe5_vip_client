@@ -55,9 +55,7 @@ class _App extends State<App> {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: error.isNotEmpty
-          ? Container(child: Text(error))
-          : WelcomeScreen(_appModel),
+      home: WelcomeScreen(_appModel..dialogController.add(error)),
     );
   }
 

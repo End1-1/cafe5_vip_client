@@ -21,7 +21,7 @@ class HttpQuery {
     try {
       var response = await http
           .post(
-              Uri.https('${prefs.string("serveraddress")}:10002', 'vipclient'),
+              Uri.https('${prefs.string("serveraddress")}:10002', 'networkdb'),
               headers: {
                 'Content-Type': 'application/json',
                 //'Content-Length': '${utf8.encode(strBody).length}'
