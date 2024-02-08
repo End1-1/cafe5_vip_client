@@ -36,6 +36,7 @@ class AppModel {
   final carNumberController = TextEditingController();
   final showUnpaidController = TextEditingController();
   final tableController = TextEditingController();
+  final afterBasketToOrdersController = TextEditingController();
 
   final basketController = StreamController.broadcast();
   final dialogController = StreamController();
@@ -112,6 +113,7 @@ class AppModel {
         tableController.text = prefs.string('table');
         configController.text = prefs.string('config');
         titleController.text = prefs.string('title');
+        afterBasketToOrdersController.text = prefs.string('afterbaskettoorders');
         Navigator.push(Prefs.navigatorKey.currentContext!,
             MaterialPageRoute(builder: (builder) => SettingsScreen(this)));
       }
@@ -131,6 +133,7 @@ class AppModel {
     prefs.setString('table', tableController.text);
     prefs.setString('title', titleController.text);
     prefs.setString('config', configController.text);
+    prefs.setString('afterbaskettoorders', afterBasketToOrdersController.text);
     httpQuery(query_init, {'query': query_init,
     'params': <String, dynamic>{
     'f_menu': int.tryParse(prefs.string('menucode')) ?? 0}}).then((value) {
@@ -260,7 +263,11 @@ class AppModel {
       case query_create_order:
         appdata.basket.clear();
         carNumberController.clear();
-        navHome();
+        if (prefs.string('afterbaskettoorders') == '1') {
+          navProcess();
+        } else {
+          navHome();
+        }
         Dialogs.show(tr('Your order was created'));
         break;
       case query_get_process_list:

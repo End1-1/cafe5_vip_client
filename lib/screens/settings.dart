@@ -42,6 +42,11 @@ class SettingsScreen extends AppScreen {
       Row(children:[
         Expanded(child: MTextFormField(controller: model.tableController, hintText: model.tr('Table')))
       ]),
+
+      const SizedBox(height: 10),
+      Row(children:[
+        Expanded(child: MTextFormField(controller: model.afterBasketToOrdersController, hintText: model.tr('After basket navigate to orders')))
+      ]),
     ],
   );
   }

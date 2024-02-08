@@ -88,7 +88,7 @@ class Data {
     for (final e in works) {
       if (e['f_state'] == 1) {
         final i = e['f_items'].first;
-        i['f_done'] = strToDateTime(i['f_begin']).add(Duration(minutes: i['f_cookingtime']));
+        i['f_done'] = strToDateTime(i['f_begin'] ?? '').add(Duration(minutes: i['f_cookingtime']));
         e['f_done'] = i['f_done'];
         times[tablesTimeMap[e['f_table']]!] = i['f_done'];
       }
