@@ -17,6 +17,7 @@ class WelcomeScreen extends AppScreen {
       toolbarHeight: kToolbarHeight,
       title: Text(prefs.appTitle()),
       actions: [
+        Container(padding: const EdgeInsets.fromLTRB(0, 0, 10, 0), child: Text(prefs.string('table'), style: const TextStyle(color: Colors.white))),
         IconButton(
             onPressed: model.callStaff, icon: Icon(Icons.help_outline_rounded)),
         IconButton(
