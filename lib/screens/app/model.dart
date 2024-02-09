@@ -190,11 +190,12 @@ class AppModel {
       m.add(a);
     }
     httpQuery(query_create_order, {
-      'query': query_create_order,
-      'params': <String, dynamic>{
+      'sql': "select sf_create_order1('${jsonEncode({
         'items': m,
+        'f_staff': 1,
+        'f_table': 1,
         'car_number': carNumberController.text
-      }
+      })}')",
     });
   }
 
@@ -309,7 +310,7 @@ class AppModel {
     Map<String, dynamic> copy = {};
     copy.addAll(params);
     if (!copy.containsKey('params')) {
-      copy['params'] = {};
+      copy['params'] = <String, dynamic>{};
     }
     correctJson(copy['params']);
     final queryResult = await HttpQuery().request(copy);
