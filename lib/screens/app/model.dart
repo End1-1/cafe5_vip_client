@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:cafe5_vip_client/screens/basket.dart';
 import 'package:cafe5_vip_client/screens/car_number.dart';
 import 'package:cafe5_vip_client/screens/dishes.dart';
+import 'package:cafe5_vip_client/screens/help/screen_help.dart';
 import 'package:cafe5_vip_client/screens/process.dart';
 import 'package:cafe5_vip_client/screens/process_end.dart';
 import 'package:cafe5_vip_client/screens/settings.dart';
@@ -38,6 +39,7 @@ class AppModel {
   final showUnpaidController = TextEditingController();
   final tableController = TextEditingController();
   final afterBasketToOrdersController = TextEditingController();
+  final messageController = TextEditingController();
 
   final basketController = StreamController.broadcast();
   final dialogController = StreamController();
@@ -64,15 +66,16 @@ class AppModel {
   void configScreenSize() {
     if (screenSize!.width > 500) {
       screenMultiple = 0.3;
-    } else
-    if (screenSize!.width >= 1240) {
+    } else if (screenSize!.width >= 1240) {
       screenMultiple = 0.2;
     }
   }
 
   Future<String> initModel() async {
     final queryResult = await HttpQuery().request({
-      'sql': "select sf_vip_init('${jsonEncode({'f_menu': int.tryParse(prefs.string('menucode')) ?? 0})}')",
+      'sql': "select sf_vip_init('${jsonEncode({
+            'f_menu': int.tryParse(prefs.string('menucode')) ?? 0
+          })}')",
     });
     if (queryResult['status'] == 1) {
       httpOk(query_init, jsonDecode(queryResult['data']['data'][0][0]));
@@ -104,6 +107,13 @@ class AppModel {
         (r) => false);
   }
 
+  void navHelp() {
+    Navigator.pushAndRemoveUntil(
+        Prefs.navigatorKey.currentContext!,
+        MaterialPageRoute(builder: (builder) => ScreenHelp(this)),
+            (r) => false);
+  }
+
   void navSettings() {
     Dialogs.getPin().then((value) {
       if ((value ?? '') == '1981') {
@@ -114,7 +124,8 @@ class AppModel {
         tableController.text = prefs.string('table');
         configController.text = prefs.string('config');
         titleController.text = prefs.string('title');
-        afterBasketToOrdersController.text = prefs.string('afterbaskettoorders');
+        afterBasketToOrdersController.text =
+            prefs.string('afterbaskettoorders');
         Navigator.push(Prefs.navigatorKey.currentContext!,
             MaterialPageRoute(builder: (builder) => SettingsScreen(this)));
       }
@@ -126,6 +137,22 @@ class AppModel {
         MaterialPageRoute(builder: (builder) => ProcessScreen(this)));
   }
 
+  void sendMessage() async {
+    final queryResult = await HttpQuery().request({
+      'sql': "select sf_create_message('${jsonEncode({
+        'f_message': messageController.text,
+        'f_table': prefs.string('table')
+      })}')",
+    });
+    if (queryResult['status'] == 1) {
+      messageController.clear();
+      navHome();
+      Dialogs.show('Ձեր հաղորդագրությունը ուղարկվել է');
+    } else {
+      Dialogs.show(queryResult['data']);
+    }
+  }
+
   void saveSettings() {
     prefs.setString('serveraddress', settingsServerAddressController.text);
     prefs.setString('menucode', menuCodeController.text);
@@ -135,12 +162,9 @@ class AppModel {
     prefs.setString('title', titleController.text);
     prefs.setString('config', configController.text);
     prefs.setString('afterbaskettoorders', afterBasketToOrdersController.text);
-    httpQuery(query_init, {'query': query_init,
-    'params': <String, dynamic>{
-    'f_menu': int.tryParse(prefs.string('menucode')) ?? 0}}).then((value) {
+    initModel().then((value) {
       navHome();
     });
-
   }
 
   void navDishes(filter) {
@@ -172,7 +196,7 @@ class AppModel {
   }
 
   void callStaff() {
-
+    navHelp();
   }
 
   void addToBasket(Map<String, dynamic> data) {
@@ -190,28 +214,23 @@ class AppModel {
       m.add(a);
     }
     httpQuery(query_create_order, {
-      'sql': "select sf_create_order1('${jsonEncode({
-        'items': m,
-        'f_staff': 1,
-        'f_table': 1,
-        'car_number': carNumberController.text
-      })}')",
+      'sql': "select sf_create_order2('${jsonEncode({
+            'items': m,
+            'f_staff': 1,
+            'f_table': 1,
+            'car_number': carNumberController.text
+          })}')",
     });
   }
 
   void getProcessList() async {
     final queryResult = await HttpQuery().request({
       'query': query_call_function,
-      'function': 'sf_get_process_list',
-      'params': <String, dynamic>{
-        'f_menu': int.tryParse(prefs.string('menucode')) ?? 0
-      }
+      'sql': "select sf_get_process_list1('${jsonEncode({'f_menu': int.tryParse(prefs.string('menucode')) ?? 0})}')"
     });
     if (queryResult['status'] == 1) {
-      httpOk(query_get_process_list, queryResult['data']);
-    } else {
-
-    }
+      httpOk(query_get_process_list, jsonDecode(queryResult['data']['data'][0][0])['data']);
+    } else {}
   }
 
   void startOrder(Map<String, dynamic> o) {
@@ -231,11 +250,11 @@ class AppModel {
   }
 
   void updateDuration(Map<String, dynamic> o) {
-      httpQuery(query_update_duration, {
-        'query': query_call_function,
-        'function':'sf_update_duration',
-        'params':o
-      });
+    httpQuery(query_update_duration, {
+      'query': query_call_function,
+      'function': 'sf_update_duration',
+      'params': o
+    });
   }
 
   void httpOk(int code, dynamic data) {

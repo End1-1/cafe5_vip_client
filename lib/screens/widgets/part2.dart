@@ -17,8 +17,8 @@ class Part2 extends StatelessWidget {
         child: Container(
           margin: const EdgeInsets.fromLTRB(10, 10, 10, 10),
           padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
-          width: 200,
-          height: 300,
+          width: model.screenSize!.width * model.screenMultiple,
+          height: (model.screenSize!.width * model.screenMultiple) + 120 ,
           decoration: const BoxDecoration(
               color: Colors.blueAccent,
               border: Border.fromBorderSide(

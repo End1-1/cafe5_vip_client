@@ -1,10 +1,12 @@
 import 'package:cafe5_vip_client/screens/app/screen.dart';
-import 'package:cafe5_vip_client/screens/widgets/part2.dart';
+import 'package:cafe5_vip_client/utils/global.dart';
 import 'package:cafe5_vip_client/utils/prefs.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/src/widgets/framework.dart';
+import 'package:flutter/src/widgets/preferred_size.dart';
 
-class WelcomeScreen extends AppScreen {
-  const WelcomeScreen(super.model, {super.key});
+class ScreenHelp extends AppScreen {
+  const ScreenHelp(super.model, {super.key});
 
   @override
   PreferredSizeWidget appBar() {
@@ -17,9 +19,6 @@ class WelcomeScreen extends AppScreen {
       toolbarHeight: kToolbarHeight,
       title: Text(prefs.appTitle()),
       actions: [
-        Container(padding: const EdgeInsets.fromLTRB(0, 0, 10, 0), child: Text(prefs.string('table'), style: const TextStyle(color: Colors.white))),
-        IconButton(
-            onPressed: model.callStaff, icon: const Icon(Icons.help_outline_rounded)),
         IconButton(
             onPressed: model.navBasket,
             icon: SizedBox(
@@ -49,26 +48,7 @@ class WelcomeScreen extends AppScreen {
                                         color: Colors.red,
                                         fontWeight: FontWeight.bold))));
                       })
-                ]))),
-        PopupMenuButton(
-          icon: const Icon(Icons.settings_outlined),
-          itemBuilder: (BuildContext context) {
-            return [
-              PopupMenuItem(
-                  child: ListTile(
-                leading: const Icon(Icons.settings_outlined),
-                title: Text(model.tr('Options')),
-                onTap: model.navSettings,
-              )),
-              PopupMenuItem(
-                  child: ListTile(
-                leading: const Icon(Icons.monitor),
-                title: Text(model.tr('Process')),
-                onTap: model.navProcess,
-              ))
-            ];
-          },
-        )
+                ])))
       ],
     );
   }
@@ -77,26 +57,31 @@ class WelcomeScreen extends AppScreen {
   Widget body() {
     return Column(
       children: [
-        Expanded(
-            child: SingleChildScrollView(
-          child: Align(
-              alignment: Alignment.center,
-              child: Column(children: [
-                for (final p1 in model.appdata.part1List()) ...[
-                  Row(children: [
-                    Expanded(child: Container(
-                      child: Text(p1['f_name'], textAlign: TextAlign.center,  style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold))
-                    ))
-                  ],),
-                  Wrap(
-                    direction: Axis.horizontal,
-                    children: [
-                      for (final e in model.appdata.part2List(p1['f_id'])) ...[Part2(e, model)]
-                    ],
-                  )
-                ]
-              ])),
-        ))
+        Row(children:[ Expanded(child: Text('Մեր աշխատակիցը կմոտենա ձեզ', textAlign: TextAlign.center, style: const TextStyle(fontSize: 20),))]),
+        const SizedBox(height: 20,),
+        Container(
+            //padding: EdgeInsets.only(bottom: MediaQuery.of(Prefs.navigatorKey.currentContext!).viewInsets.bottom),
+            child: TextFormField(
+              controller: model.messageController,
+          style: const TextStyle(),
+          decoration: const InputDecoration(
+            hintText: 'Լրացուցիչ հաղորդագրություն',
+            border: OutlineInputBorder(
+              borderSide: BorderSide(color: Colors.black54)
+            )
+          ),
+            minLines: 5,
+            maxLines: 20,
+        )),
+       // Expanded(child: Container()),
+        const SizedBox(height: 20,),
+        Container(
+            //padding: EdgeInsets.only(bottom: MediaQuery.of(Prefs.navigatorKey.currentContext!).viewInsets.bottom),
+            height: kButtonHeight,
+            alignment: Alignment.center,
+            child: globalOutlinedButton(
+                onPressed: model.sendMessage,
+                title: model.tr('Ուղարկել'))),
       ],
     );
   }

@@ -96,6 +96,9 @@ class Data {
     //fill pending
     for (int i = 0; i < works.length; i++) {
       final w = works[i];
+      if (w['f_items'] == null) {
+        continue;
+      }
       if (w['f_state'] == 1) {
         continue;
       }
