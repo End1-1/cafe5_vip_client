@@ -72,15 +72,19 @@ class AppModel {
   }
 
   Future<String> initModel() async {
+    dialogController.add(1);
     final queryResult = await HttpQuery().request({
       'sql': "select sf_vip_init('${jsonEncode({
             'f_menu': int.tryParse(prefs.string('menucode')) ?? 0
           })}')",
     });
+    Navigator.pop(Loading.dialogContext);
     if (queryResult['status'] == 1) {
-      httpOk(query_init, jsonDecode(queryResult['data']['data'][0][0]));
+      String s = queryResult['data']['data'][0][0];
+      httpOk(query_init, jsonDecode(s));
       return '';
     } else {
+      dialogController.add(queryResult['data']);
       return queryResult['data'];
     }
   }
@@ -214,10 +218,11 @@ class AppModel {
       m.add(a);
     }
     httpQuery(query_create_order, {
-      'sql': "select sf_create_order2('${jsonEncode({
+      'sql': "select sf_create_order('${jsonEncode({
+            'order': appdata.basketData,
             'items': m,
             'f_staff': 1,
-            'f_table': 1,
+            'f_table': int.tryParse(prefs.string('table')) ?? 1,
             'car_number': carNumberController.text
           })}')",
     });
@@ -226,7 +231,7 @@ class AppModel {
   void getProcessList() async {
     final queryResult = await HttpQuery().request({
       'query': query_call_function,
-      'sql': "select sf_get_process_list1('${jsonEncode({'f_menu': int.tryParse(prefs.string('menucode')) ?? 0})}')"
+      'sql': "select sf_get_process_list('${jsonEncode({'f_menu': int.tryParse(prefs.string('menucode')) ?? 0})}')"
     });
     if (queryResult['status'] == 1) {
       httpOk(query_get_process_list, jsonDecode(queryResult['data']['data'][0][0])['data']);

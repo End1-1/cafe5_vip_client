@@ -64,8 +64,11 @@ class _App extends State<App> {
       FlutterNativeSplash.remove();
       return;
     }
-    error = await _appModel.initModel();
+    _appModel.initModel().then((value) {
+      error = value;
+      //FlutterNativeSplash.remove();
+      setState(() {});
+    });
     FlutterNativeSplash.remove();
-    setState(() {});
   }
 }
