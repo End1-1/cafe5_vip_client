@@ -46,7 +46,15 @@ class AppModel {
 
   late final Data appdata;
 
-  Size? screenSize;
+  Size? _screenSize;
+  Size screenSize() {
+    if ((_screenSize?.width ?? 0) > 0) {
+      return _screenSize!;
+    }
+    _screenSize = MediaQuery.sizeOf(Prefs.navigatorKey.currentContext!);
+    configScreenSize();
+    return screenSize();
+  }
   var screenMultiple = 0.43;
 
   AppModel() {
@@ -64,9 +72,9 @@ class AppModel {
   }
 
   void configScreenSize() {
-    if (screenSize!.width > 500) {
+    if (_screenSize!.width > 500) {
       screenMultiple = 0.3;
-    } else if (screenSize!.width >= 1240) {
+    } else if (_screenSize!.width >= 1240) {
       screenMultiple = 0.2;
     }
   }

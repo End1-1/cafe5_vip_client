@@ -4,6 +4,7 @@ import 'package:cafe5_vip_client/screens/app/model.dart';
 import 'package:cafe5_vip_client/screens/welcome.dart';
 import 'package:cafe5_vip_client/utils/http_overrides.dart';
 import 'package:cafe5_vip_client/utils/prefs.dart';
+import 'package:cafe5_vip_client/widgets/dialogs.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:package_info_plus/package_info_plus.dart';
@@ -45,8 +46,6 @@ class _App extends State<App> {
 
   @override
   Widget build(BuildContext context) {
-    _appModel.screenSize ??= MediaQuery.sizeOf(context);
-    _appModel.configScreenSize();
     return MaterialApp(
       title: prefs.appTitle(),
       debugShowCheckedModeBanner: false,

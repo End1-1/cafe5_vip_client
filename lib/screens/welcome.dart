@@ -77,6 +77,7 @@ class WelcomeScreen extends AppScreen {
   Widget body() {
     return Column(
       children: [
+        Text(model.screenSize().width.toString()),
         Expanded(
             child: SingleChildScrollView(
           child: Align(

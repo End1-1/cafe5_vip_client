@@ -17,8 +17,8 @@ class Part2 extends StatelessWidget {
         child: Container(
           margin: const EdgeInsets.fromLTRB(10, 10, 10, 10),
           padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
-          width: model.screenSize!.width * model.screenMultiple,
-          height: (model.screenSize!.width * model.screenMultiple) + 120 ,
+          width: model.screenSize().width * model.screenMultiple,
+          height: (model.screenSize().width * model.screenMultiple) + 120 ,
           decoration: const BoxDecoration(
               color: Colors.blueAccent,
               border: Border.fromBorderSide(
@@ -37,10 +37,10 @@ class Part2 extends StatelessWidget {
                 width: 200,
                 child: data['f_image'].isEmpty
                     ? FittedBox(child: Icon(Icons.not_interested_outlined,
-                        size: model.screenSize!.width * model.screenMultiple))
+                        size: model.screenSize().width * model.screenMultiple))
                     : FittedBox(child: imageFromBase64(data['f_image'],
-                        width: model.screenSize!.width * model.screenMultiple,
-                    height: model.screenSize!.width * model.screenMultiple))),
+                        width: model.screenSize().width * model.screenMultiple,
+                    height: model.screenSize().width * model.screenMultiple))),
             Expanded(child: Center(child: Text(data['f_name'],
                 textAlign: TextAlign.center,
                 style: const TextStyle(
