@@ -130,14 +130,14 @@ class Data {
     }
 
     //reassing tables
-    if (reassingTablesList.isNotEmpty) {
-      model.httpQuery(AppModel.query_reassign_table, {
-        'query': AppModel.query_call_function,
-        'function': 'sf_reassign_tables',
-        'params': <String,dynamic>{
-          'list': reassingTablesList
-        }
-      });
-    }
+    // if (reassingTablesList.isNotEmpty) {
+    //   model.httpQuery(AppModel.query_reassign_table, {
+    //     'query': AppModel.query_call_function,
+    //     'function': 'sf_reassign_tables',
+    //     'params': <String,dynamic>{
+    //       'list': reassingTablesList
+    //     }
+    //   });
+    //}
   }
 }

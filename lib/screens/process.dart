@@ -75,23 +75,6 @@ class _BodyState extends State<_Body> {
                         gradient: LinearGradient(
                             begin: Alignment.topCenter,
                             end: Alignment.bottomCenter,
-                            colors: [Colors.blueAccent, Colors.blue])),
-                    child: Text(
-                      '${widget.model.tr('In progress')} $inProgress',
-                      textAlign: TextAlign.center,
-                      style: const TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white),
-                    ),
-                  )),
-                  Expanded(
-                      child: Container(
-                    padding: const EdgeInsets.all(10),
-                    decoration: const BoxDecoration(
-                        gradient: LinearGradient(
-                            begin: Alignment.topCenter,
-                            end: Alignment.bottomCenter,
                             colors: [Colors.deepOrange, Colors.orange])),
                     child: Text(
                       '${widget.model.tr('Pending')} $pending',
@@ -109,24 +92,7 @@ class _BodyState extends State<_Body> {
                         child: Row(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                      Expanded(
-                          child: Container(
-                              color: Colors.blue,
-                              child: Column(
-                                  mainAxisSize: MainAxisSize.max,
-                                  crossAxisAlignment:
-                                      CrossAxisAlignment.stretch,
-                                  children: [
-                                    for (final o in snapshot.data ?? []) ...[
-                                      if (o['f_state'] == 1 || o['f_state'] == 2) ...[
-                                        processWidget(o),
-                                        const Divider(
-                                            color: Colors.white,
-                                            height: 2,
-                                            thickness: 2)
-                                      ]
-                                    ],
-                                  ]))),
+
                       Expanded(
                           child: Container(
                               color: Colors.orange,
@@ -149,7 +115,7 @@ class _BodyState extends State<_Body> {
   Widget processWidget(Map<String, dynamic> o) {
     return InkWell(
         onTap: () {
-          widget.model.endOrder(o);
+          //widget.model.endOrder(o);
         },
         child: Container(
             padding: const EdgeInsets.all(5),
@@ -219,7 +185,7 @@ class _BodyState extends State<_Body> {
   Widget pendingWidget(Map<String, dynamic> o) {
     return InkWell(
         onTap: () {
-          ProcessStartScreen.show(o, widget.model);
+         // ProcessStartScreen.show(o, widget.model);
         },
         child: Container(
             padding: const EdgeInsets.all(5),
@@ -277,7 +243,8 @@ class _BodyState extends State<_Body> {
   @override
   void initState() {
     super.initState();
-    _timer = Timer.periodic(const Duration(seconds: 30), timerFunction);
+    //_timer = Timer.periodic(const Duration(seconds: 30), timerFunction);
+    _timer = Timer.periodic(const Duration(seconds: 30), (_){});
   }
 
   @override
